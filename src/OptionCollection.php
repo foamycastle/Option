@@ -179,16 +179,6 @@ class OptionCollection implements Contract\OptionSet
         return $this;
     }
 
-    public function getDefault (string $key): mixed
-    {
-        // TODO: Implement getDefault() method.
-    }
-
-    public function hasDefault (string $key): bool
-    {
-        // TODO: Implement hasDefault() method.
-    }
-
     /**
      * @inheritDoc
      */
