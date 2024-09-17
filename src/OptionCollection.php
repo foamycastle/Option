@@ -10,6 +10,13 @@ class OptionCollection implements Contract\OptionSet
      * @var Option[]
      */
     protected array $options = [];
+    private function __construct(array $options)
+    {
+        foreach ($options as $option=>$value) {
+            $newOption = Option::Create($option, $value);
+            $this->options[] = $newOption;
+        }
+    }
     public function __get (string $name) :?Option
     {
         return $this->getOptionNamed($name, $index);

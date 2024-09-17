@@ -10,7 +10,7 @@ class Option implements \Stringable, \Serializable, JsonSerializable {
     protected bool $default;
     protected string $type;
 
-    function __construct(string $key, mixed $value, bool $default = false)
+    private function __construct(string $key, mixed $value, bool $default = false)
     {
         $this->key = $key;
         $this->value = $value;
