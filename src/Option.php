@@ -2,9 +2,10 @@
 
 namespace Foamycastle\Util\Option;
 
+use Foamycastle\Util\Option\Contract\OptionValue;
 use JsonSerializable;
 
-class Option implements \Stringable, \Serializable, JsonSerializable {
+class Option implements \Stringable, \Serializable, JsonSerializable, OptionValue {
     protected string $key;
     protected mixed $value;
     protected bool $default;
@@ -22,7 +23,7 @@ class Option implements \Stringable, \Serializable, JsonSerializable {
         return $this->key;
     }
 
-    public function withKey (string $key):self
+    public function withKey (string $key):OptionValue
     {
         $this->key = $key;
         return $this;
@@ -35,7 +36,7 @@ class Option implements \Stringable, \Serializable, JsonSerializable {
     {
         return $this->default;
     }
-    public function setDefault (bool $default=true):self{
+    public function setDefault (bool $default=true):OptionValue{
         $this->default=$default;
         return $this;
     }
@@ -43,7 +44,7 @@ class Option implements \Stringable, \Serializable, JsonSerializable {
     {
         return json_encode($this);
     }
-    public function withValue (mixed $value):self
+    public function withValue (mixed $value):OptionValue
     {
         return new self($this->key, $value, $this->default);
     }

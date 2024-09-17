@@ -3,6 +3,7 @@
 namespace Foamycastle\Util\Option;
 
 use Foamycastle\Util\Option\Contract\OptionSet;
+use Foamycastle\Util\Option\Contract\OptionValue;
 
 class OptionCollection implements Contract\OptionSet
 {
@@ -13,21 +14,54 @@ class OptionCollection implements Contract\OptionSet
     private function __construct(array $options)
     {
         foreach ($options as $option=>$value) {
+            if($value instanceof OptionValue) {
+                $this->options[]=$value;
+                continue;
+            }
             $newOption = Option::Create($option, $value);
             $this->options[] = $newOption;
         }
     }
     public function __get (string $name) :?Option
     {
-        return $this->getOptionNamed($name, $index);
+        $getOption=$this->getOptionNamed($name, $index);
+        if($getOption===null){
+            $newOption = Option::Create($name,null);
+            $this->options[] = $newOption;
+            return $newOption;
+        }
+        return $getOption;
     }
     public function __set (string $name, $value): void
     {
         $option=$this->getOptionNamed($name,$index);
         if($option!==null) {
             $this->options[$index] = $option->withValue($value);
+        }else{
+            $this->options[] = Option::Create($name,$value);
         }
     }
+    public function __isset (string $name): bool
+    {
+        return $this->getOptionNamed($name,$index) !== null;
+    }
+    public function __unset (string $name): void
+    {
+        if($this->getOptionNamed($name,$index)!==null) {
+            unset($this->options[$index]);
+        }
+    }
+    public function __invoke(string|array $option):?OptionValue
+    {
+        if(is_string($option)) {
+            return $this->getOptionNamed($option,$index);
+        }
+        foreach($option as $name=>$value) {
+            $this->{$name}->withValue($value);
+        }
+        return null;
+    }
+
 
     /**
      * @inheritDoc
@@ -91,7 +125,7 @@ class OptionCollection implements Contract\OptionSet
      */
     public function offsetSet (mixed $offset, mixed $value): void
     {
-        $newOption = new Option($offset, $value);
+        $newOption = Option::Create($offset, $value);
         if(!$this->offsetExists($offset)) {
             $this->options[] = $newOption;
         }
@@ -172,7 +206,7 @@ class OptionCollection implements Contract\OptionSet
     {
         // TODO: Implement __unserialize() method.
     }
-    public function getOptionNamed (string $key, ?int &$index): ?Option
+    public function getOptionNamed (string $key, ?int &$index): ?OptionValue
     {
         foreach ($this->options as $option) {
             if (strcmp($option->getKey(), $key) === 0) {
