@@ -10,6 +10,18 @@ class OptionCollection implements Contract\OptionSet
      * @var Option[]
      */
     protected array $options = [];
+    public function __get (string $name) :?Option
+    {
+        return $this->getOptionNamed($name, $index);
+    }
+    public function __set (string $name, $value): void
+    {
+        $option=$this->getOptionNamed($name,$index);
+        if($option!==null) {
+            $this->options[$index] = $option->withValue($value);
+        }
+    }
+
     /**
      * @inheritDoc
      */
@@ -116,13 +128,13 @@ class OptionCollection implements Contract\OptionSet
 
     public function setOptionAsDefault (array|string $key):self
     {
-        $this->getOptionNamed($key)->setDefault();
+        $this->getOptionNamed($key,$index)->setDefault();
         return $this;
     }
 
     public function unsetOptionAsDefault (array|string $key):self
     {
-        $this->getOptionNamed($key)->setDefault(false);
+        $this->getOptionNamed($key,$index)->setDefault(false);
         return $this;
     }
 
