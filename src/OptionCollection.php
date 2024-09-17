@@ -61,7 +61,7 @@ class OptionCollection implements Contract\OptionSet
     /**
      * @inheritDoc
      */
-    #[\ReturnTypeWillChange]
+
     public function offsetGet (mixed $offset): ?Option
     {
         return $this->getOptionNamed($offset, $index);
