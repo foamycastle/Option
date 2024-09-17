@@ -182,4 +182,9 @@ class OptionCollection implements Contract\OptionSet
         }
         return null;
     }
+    public static function Create (array $data): OptionSet
+    {
+        return new self($data);
+    }
+
 }

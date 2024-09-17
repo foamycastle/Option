@@ -115,4 +115,8 @@ class Option implements \Stringable, \Serializable, JsonSerializable {
             'type' => $this->type,
         ];
     }
+    public static function Create(string $key, mixed $value, bool $default = false): OptionValue
+    {
+        return new self($key, $value, $default);
+    }
 }
